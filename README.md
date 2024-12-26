@@ -20,9 +20,11 @@ idea by Noble WS (2009) [A Quick Guide to Organizing Computational Biology Proje
 * Your presentation, 1131_bioinformatics_FP_groupID.ppt/pptx/pdf (i.e.,1131_bioinformatics_FP_group1.ppt), by **01.02 9:20 am**
 * Any related document for the project
   * i.e., software user guide
+  * hic-preprocess-steps.md
 
 ### data (do not upload fastq file)
 * Source
+  * data-src.md
 * Format
 * Size
 
