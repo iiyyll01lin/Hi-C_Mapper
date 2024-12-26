@@ -2,15 +2,43 @@
 
 ## Step 1: Download SRA file (SRA Toolkit)
 
+I use docker in wsl to avoid any instalation problem:
+
 ```
+docker pull ncbi/sra-tools
+docker images
+docker run -itd -v /mnt/e/workspace/bio-fp/:/home/yy/bio-fp --name yy-sra ncbi/sra-tools
+docker ps -a
+docker attach <container_id>
+```
+
+In the container, use the sra-toolkit cli:
+
+```
+# check bin
+which prefetch
+/usr/local/bin/prefetch
+
 prefetch SRR5579177
+2024-12-26T13:38:50 prefetch.3.1.0:  HTTPS download succeed
+2024-12-26T13:41:08 prefetch.3.1.0:  'SRR5579177' is valid
+2024-12-26T13:41:08 prefetch.3.1.0: 1) 'SRR5579177' was downloaded successfully
 ```
 
 ## Step 2: Convert SRA to FASTQ (SRA Toolkit)
 
 ```
-fastq-dump --split-3 SRR5579177.sra
+# with progress bars
+fasterq-dump SRR5579177 -p
+join   :|-------------------------------------------------- 100%   
+concat :|-------------------------------------------------- 100%   
+spots read      : 301,260,192
+reads read      : 602,520,384
+reads written   : 602,520,384
 ```
+
+default is `--split-3`, which means:
+The spots are split into ( biological ) reads, for each read : 4 lines of FASTQ or 2 lines of FASTA are written. For spots having 2 reads, the reads are written into the *_1.fastq and *_2.fastq files. Unmated reads are placed in *.fastq. If the accession has no spots with one single read, the *.fastq-file will not be created.
 
 ## Step 3: Quality control (FastQC)
 
