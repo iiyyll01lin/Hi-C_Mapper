@@ -44,19 +44,90 @@ The spots are split into ( biological ) reads, for each read : 4 lines of FASTQ 
 
 ### Quality Control with FastQC
 
+Review FastQC Reports: Open the generated HTML reports to review the quality of your reads. Look for issues such as low-quality scores, adapter contamination, or overrepresented sequences.
+
+install fastqc:
+
 ```
-fastqc reads_1.fastq reads_2.fastq
+# clean env
+docker pull ubuntu
+docker images
+docker run -itd -v /mnt/e/workspace/bio-fp/:/home/yy/bio-fp/ --name yy-biofp ubuntu
+docker attach yy-biofp
+
+# in container
+apt update
+apt install fastqc
 ```
 
-Review FastQC Reports: Open the generated HTML reports to review the quality of your reads. Look for issues such as low-quality scores, adapter contamination, or overrepresented sequences.
+```
+fastqc reads_1.fastq reads_2.fastq
+null
+Started analysis of SRR5579177_1.fastq
+null
+Approx 5% complete for SRR5579177_1.fastq
+Approx 10% complete for SRR5579177_1.fastq
+Approx 15% complete for SRR5579177_1.fastq
+Approx 20% complete for SRR5579177_1.fastq
+Approx 25% complete for SRR5579177_1.fastq
+Approx 30% complete for SRR5579177_1.fastq
+Approx 35% complete for SRR5579177_1.fastq
+Approx 40% complete for SRR5579177_1.fastq
+Approx 45% complete for SRR5579177_1.fastq
+Approx 50% complete for SRR5579177_1.fastq
+Approx 55% complete for SRR5579177_1.fastq
+Approx 60% complete for SRR5579177_1.fastq
+Approx 65% complete for SRR5579177_1.fastq
+Approx 70% complete for SRR5579177_1.fastq
+Approx 75% complete for SRR5579177_1.fastq
+Approx 80% complete for SRR5579177_1.fastq
+Approx 85% complete for SRR5579177_1.fastq
+Approx 90% complete for SRR5579177_1.fastq
+Approx 95% complete for SRR5579177_1.fastq
+Analysis complete for SRR5579177_1.fastq
+Started analysis of SRR5579177_2.fastq
+Approx 5% complete for SRR5579177_2.fastq
+Approx 10% complete for SRR5579177_2.fastq
+Approx 15% complete for SRR5579177_2.fastq
+Approx 20% complete for SRR5579177_2.fastq
+Approx 25% complete for SRR5579177_2.fastq
+Approx 30% complete for SRR5579177_2.fastq
+Approx 35% complete for SRR5579177_2.fastq
+Approx 40% complete for SRR5579177_2.fastq
+Approx 45% complete for SRR5579177_2.fastq
+Approx 50% complete for SRR5579177_2.fastq
+Approx 55% complete for SRR5579177_2.fastq
+Approx 60% complete for SRR5579177_2.fastq
+Approx 65% complete for SRR5579177_2.fastq
+Approx 70% complete for SRR5579177_2.fastq
+Approx 75% complete for SRR5579177_2.fastq
+Approx 80% complete for SRR5579177_2.fastq
+Approx 85% complete for SRR5579177_2.fastq
+Approx 90% complete for SRR5579177_2.fastq
+Approx 95% complete for SRR5579177_2.fastq
+Analysis complete for SRR5579177_2.fastq
+```
+
+the outputs are 2 reports, I put it in results: fastqc-report
 
 ### Trimming and Filtering with Cutadapt 
 
+cutadapt instalation:
+
 ```
-cutadapt -a ADAPTER_FWD -A ADAPTER_REV \
+apt update
+apt install cutadapt
+
+# check
+which cutadapt
+/usr/bin/cutadap
+```
+
+```
+cutadapt -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT \
     -q 20,20 -m 36 \
-    -o trimmed_reads_1.fastq -p trimmed_reads_2.fastq \
-    reads_1.fastq reads_2.fastq
+    -o trimmed_reads_SRR5579177_1.fastq -p trimmed_readsSRR5579177_2.fastq \
+    SRR5579177_1.fastq SRR5579177_2.fastq
 ```
 
 * `-a ADAPTER_FWD`: Adapter sequence for the forward read.
@@ -130,3 +201,16 @@ hic-pro -i contact_matrix -o normalized_matrix -c config_file
 ```
 java -jar Juicebox.jar -g reference_genome.fa -n normalized_matrix
 ```
+
+## Reference
+
+### sra-tools docker
+
+* https://github.com/ncbi/sra-tools
+* https://hub.docker.com/r/ncbi/sra-tools
+* https://github.com/ncbi/sra-tools/wiki/SRA-tools-dockerhttps://github.com/ncbi/sra-tools/wiki/08.-prefetch-and-fasterq-dump
+* https://github.com/ncbi/sra-tools/wiki/HowTo:-fasterq-dump
+* 
+
+###
+
