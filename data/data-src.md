@@ -1,53 +1,79 @@
 # Data Selection
 
-[BioProject]
+## Experiment Information
 
-https://www.ncbi.nlm.nih.gov/bioproject/387300
+|                          | Information                        |
+| ------------------------ | ---------------------------------- |
+| Organism                 | Drosophila melanogaster            |
+| Instrument Model         | Illumina HiSeq 2500                |
+| Mapping Genome           | Drosophila melanogaster genome     |
+| Data Processing Software | bowtie (params: -t -a -m 1 --best) |
+
+## Reference Genome 
+
+- [Drosophila melanogaster genome (dm3)](https://genome.ucsc.edu/cgi-bin/hgSearch?search=dm3&db=dm3)
+
+## SRA Data
+
+### BioProject
+
+- [BioProject PRJNA387300](https://www.ncbi.nlm.nih.gov/bioproject/387300)
 
 Drosophila melanogaster (fruit fly)
 TADs are 3D structural units of higher-order chromosome organization in Drosophila [S2R+]
 
-[Links from BioProject]
+### Links from BioProject
 
-https://www.ncbi.nlm.nih.gov/biosample?Db=biosample&DbFrom=bioproject&Cmd=Link&LinkName=bioproject_biosample&LinkReadableName=BioSample&ordinalpos=1&IdsFromResult=387300
+- [BioSample](https://www.ncbi.nlm.nih.gov/biosample?Db=biosample&DbFrom=bioproject&Cmd=Link&LinkName=bioproject_biosample&LinkReadableName=BioSample&ordinalpos=1&IdsFromResult=387300)
 
-[BioSample]
-https://www.ncbi.nlm.nih.gov/biosample/7147001
+### BioSample
 
-[geo sample: Sample GSM2633507]
-https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM2633507
+- [BioSample SAMN07147001](https://www.ncbi.nlm.nih.gov/biosample/7147001)
 
-BioSample	SAMN07147001
-SRA	SRX2837380
+### GEO Sample
 
-[Series GSE99104] (bin)
-https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE99104
+- [Sample GSM2633507](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM2633507)
 
-BioProject	PRJNA387300
-SRA	SRP107556
+BioSample: SAMN07147001
+SRA: SRX2837380
 
-SOFT formatted family file(s)	SOFTHelp
-MINiML formatted family file(s)	MINiMLHelp
-Series Matrix File(s)	TXTHelp
+### Series GSE99104
 
-Supplementary file	Size	Download	File type/resource
-GSE99104_nm_none_10000.bins.txt.gz	92.7 Kb	(ftp)(http)	TXT
-GSE99104_nm_none_10000.n_contact.txt.gz	114.7 Mb	(ftp)(http)	TXT
-GSE99104_nm_none_160000.bins.txt.gz	6.0 Kb	(ftp)(http)	TXT
-GSE99104_nm_none_160000.n_contact.txt.gz	4.7 Mb	(ftp)(http)	TXT
-GSE99104_nm_none_20000.bins.txt.gz	46.6 Kb	(ftp)(http)	TXT
-GSE99104_nm_none_20000.n_contact.txt.gz	45.8 Mb	(ftp)(http)	TXT
-GSE99104_nm_none_40000.bins.txt.gz	23.3 Kb	(ftp)(http)	TXT
-GSE99104_nm_none_40000.n_contact.txt.gz	62.6 Mb	(ftp)(http)	TXT
-GSE99104_nm_none_5000.bins.txt.gz	174.7 Kb	(ftp)(http)	TXT
-GSE99104_nm_none_5000.n_contact.txt.gz	232.9 Mb	(ftp)(http)	TXT
-GSE99104_nm_none_80000.bins.txt.gz	12.0 Kb	(ftp)(http)	TXT
-GSE99104_nm_none_80000.n_contact.txt.gz	17.1 Mb	(ftp)(http)	TXT
+- [Series GSE99104](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE99104)
 
-[SRA	SRP107556]
-https://www.ncbi.nlm.nih.gov/sra?term=SRP107556
+BioProject: PRJNA387300
+SRA: SRP107556
 
-[SRX2837380: GSM2633507: S2R+ rep 1; Drosophila melanogaster; Hi-C]
-https://www.ncbi.nlm.nih.gov/sra/SRX2837380[accn]
+SOFT formatted family file(s): SOFTHelp
+MINiML formatted family file(s): MINiMLHelp
+Series Matrix File(s): TXTHelp
 
-SRR5579177	301,260,192	30.1G	15.4Gb	2018-01-08
+### Supplementary Files
+
+| File Name                                | Size     | Format |
+| ---------------------------------------- | -------- | ------ |
+| GSE99104_nm_none_10000.bins.txt.gz       | 92.7 Kb  | TXT    |
+| GSE99104_nm_none_10000.n_contact.txt.gz  | 114.7 Mb | TXT    |
+| GSE99104_nm_none_160000.bins.txt.gz      | 6.0 Kb   | TXT    |
+| GSE99104_nm_none_160000.n_contact.txt.gz | 4.7 Mb   | TXT    |
+| GSE99104_nm_none_20000.bins.txt.gz       | 46.6 Kb  | TXT    |
+| GSE99104_nm_none_20000.n_contact.txt.gz  | 45.8 Mb  | TXT    |
+| GSE99104_nm_none_40000.bins.txt.gz       | 23.3 Kb  | TXT    |
+| GSE99104_nm_none_40000.n_contact.txt.gz  | 62.6 Mb  | TXT    |
+| GSE99104_nm_none_5000.bins.txt.gz        | 174.7 Kb | TXT    |
+| GSE99104_nm_none_5000.n_contact.txt.gz   | 232.9 Mb | TXT    |
+| GSE99104_nm_none_80000.bins.txt.gz       | 12.0 Kb  | TXT    |
+| GSE99104_nm_none_80000.n_contact.txt.gz  | 17.1 Mb  | TXT    |
+
+### SRA SRP107556
+
+- [SRA SRP107556](https://www.ncbi.nlm.nih.gov/sra?term=SRP107556)
+
+### SRX2837380: GSM2633507: S2R+ rep 1; Drosophila melanogaster; Hi-C
+
+- [SRX2837380](https://www.ncbi.nlm.nih.gov/sra/SRX2837380[accn])
+
+Run: SRR5579177
+Reads: 301,260,192
+Data Size: 30.1G (15.4Gb)
+Date: 2018-01-08
