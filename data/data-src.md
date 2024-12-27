@@ -3,7 +3,7 @@
 ## Experiment Information
 
 |                          | Information                                   |
-|--------------------------|-----------------------------------------------|
+| ------------------------ | --------------------------------------------- |
 | Organism                 | Drosophila melanogaster                       |
 | Instrument Model         | Illumina HiSeq 2500                           |
 | Mapping Genome           | Drosophila melanogaster genome (assembly dm3) |
