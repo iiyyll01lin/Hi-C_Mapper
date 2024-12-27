@@ -164,8 +164,11 @@ fastqc trimmed_reads_1_paired.fastq trimmed_reads_2_paired.fastq
 
 ```bash
 sudo apt-get install bwa
+
+# index the reference genome
 bwa index reference_genome.fa
 
+#  align the reads to the reference genome, for paired-end reads
 bwa mem -SP5M reference_genome.fa reads_1.fastq reads_2.fastq > aligned_reads.sam
 ```
 
@@ -174,6 +177,19 @@ bwa mem -SP5M reference_genome.fa reads_1.fastq reads_2.fastq > aligned_reads.sa
 * `5M`: Set the mismatch penalty to 5.
 * `reference_genome.fa`: The reference genome file.
 * `reads_1.fastq reads_2.fastq`: Input FASTQ files.
+
+alternatively:
+
+```
+# Build the Bowtie2 index
+bowtie2-build reference.fasta reference_index
+
+# Align paired-end reads (FASTQ) to the reference
+bowtie2 -x reference_index \
+    -1 reads_1.fastq \
+    -2 reads_2.fastq \
+    -S output.sam
+```
 
 ### Process Aligned Reads with HiC-Pro
 
