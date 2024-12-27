@@ -82,3 +82,42 @@ pheatmap(log_hic_matrix,
 dev.off()
 
 cat("Hi-C heatmap saved to:", output_file, "\n")
+
+if (!requireNamespace("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+BiocManager::install("HiContacts")
+
+library(HiContacts)
+plotMatrix(hic)
+
+# Load required libraries
+library(ggplot2)
+library(reshape2)
+
+# Load the data
+# Replace "your_file.csv" with the path to your data file
+data <- read.table("GSE99104_nm_none_160000.n_contact.txt", header = TRUE)
+
+# Create a matrix from observed counts
+# Assuming cbin1 and cbin2 define rows and columns, and observed_count is the value
+n_bins <- max(data$cbin1, data$cbin2)
+matrix_observed <- matrix(0, nrow = n_bins, ncol = n_bins)
+
+for (i in 1:nrow(data)) {
+  row <- data$cbin1[i]
+  col <- data$cbin2[i]
+  matrix_observed[row, col] <- data$observed_count[i]
+  matrix_observed[col, row] <- data$observed_count[i]  # Symmetry for Hi-C data
+}
+
+# Convert matrix to a data frame for ggplot2
+heatmap_data <- melt(matrix_observed)
+colnames(heatmap_data) <- c("x", "y", "value")
+
+# Plot heatmap
+ggplot(heatmap_data, aes(x = x, y = y, fill = log2(value + 1))) +
+  geom_tile() +
+  scale_fill_gradient(low = "skyblue", high = "yellow", na.value = "white") +
+  theme_minimal() +
+  labs(title = "Hi-C Contact Heatmap", x = "Genomic Bins", y = "Genomic Bins", fill = "log2(Counts)") +
+  coord_fixed()
