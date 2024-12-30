@@ -360,10 +360,32 @@ then the fastq file with a bit over 17 MB is prepared.
 sudo apt-get install bwa
 
 # index the reference genome
-bwa index reference_genome.fa
+bwa index dm3.fa
+[bwa_index] Pack FASTA... 0.86 sec
+[bwa_index] Construct BWT for the packed sequence...
+[BWTIncCreate] textLength=337473074, availableWord=35745488
+[BWTIncConstructFromPacked] 10 iterations done. 58964098 characters processed.
+[BWTIncConstructFromPacked] 20 iterations done. 108932194 characters processed.
+[BWTIncConstructFromPacked] 30 iterations done. 153339938 characters processed.
+[BWTIncConstructFromPacked] 40 iterations done. 192805618 characters processed.
+[BWTIncConstructFromPacked] 50 iterations done. 227878786 characters processed.
+[BWTIncConstructFromPacked] 60 iterations done. 259047874 characters processed.
+[BWTIncConstructFromPacked] 70 iterations done. 286747026 characters processed.
+[BWTIncConstructFromPacked] 80 iterations done. 311362066 characters processed.
+[BWTIncConstructFromPacked] 90 iterations done. 333235922 characters processed.
+[bwt_gen] Finished constructing BWT in 93 iterations.
+[bwa_index] 88.56 seconds elapse.
+[bwa_index] Update BWT... 0.85 sec
+[bwa_index] Pack forward-only FASTA... 0.64 sec
+[bwa_index] Construct SA from BWT and Occ... 43.81 sec
+[main] Version: 0.7.17-r1188
+[main] CMD: bwa index dm3.fa
+[main] Real time: 145.710 sec; CPU: 134.736 sec
 
 #  align the reads to the reference genome, for paired-end reads
 bwa mem -SP5M reference_genome.fa reads_1.fastq reads_2.fastq > aligned_reads.sam
+
+bwa mem -SP5M dm3.fa SRR5579177_1.fastq SRR5579177_2.fastq > dm3-aligned_reads.sam
 ```
 
 * `-S`: Output in SAM format.
@@ -371,6 +393,9 @@ bwa mem -SP5M reference_genome.fa reads_1.fastq reads_2.fastq > aligned_reads.sa
 * `5M`: Set the mismatch penalty to 5.
 * `reference_genome.fa`: The reference genome file.
 * `reads_1.fastq reads_2.fastq`: Input FASTQ files.
+
+you can find the flags here:
+https://bio-bwa.sourceforge.net/bwa.shtml
 
 alternatively:
 
