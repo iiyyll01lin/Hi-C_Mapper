@@ -321,6 +321,39 @@ fastqc trimmed_reads_1_paired.fastq trimmed_reads_2_paired.fastq
 
 ## Step 4: Align Reads (BWA-MEM, HiC-Pro)
 
+### Prepare the referance genome (dm3)
+
+according to the paper, we need to use the dm3 for the reference genome which can find in the UCSC Genome Browser:
+https://hgdownload.soe.ucsc.edu/downloads.html
+
+and the dm3 is here:
+https://hgdownload.soe.ucsc.edu/goldenPath/dm3/bigZips/
+
+```bash
+# download through http
+wget https://hgdownload.cse.ucsc.edu/goldenPath/dm3/bigZips/dm3.fa.gz
+
+# unzip
+gunzip dm3.fa.gz
+
+ls -al 
+-rwxrwxrwx 1 jasonyy jasonyy   172111398 Jan 23  2020 dm3.fa
+
+head dm3.fa
+>chr2L
+Cgacaatgcacgacagaggaagcagaacagatatttagattgcctctcat
+tttctctcccatattatagggagaaatatgatcgcgtatgcgagagtagt
+gccaacatattgtgctctttgattttttggcaacccaaaatggtggcgga
+tgaaCGAGATGATAATATATTCAAGTTGCCGCTAATCAGAAATAAATTCA
+TTGCAACGTTAAATACAGCACAATATATGATCGCGTATGCGAGAGTAGTG
+CCAACATATTGTGCTAATGAGTGCCTCTCGTTCTCTGTCTTATATTACCG
+CAAACCCAAAAAgacaatacacgacagagagagagagcagcggagatatt
+tagattgcctattaaatatgatcgcgtatgcgagagtagtgccaacatat
+tgtgctctCTATATAATGACTGCCTCTCATTCTGTCTTATTTTACCGCAA
+```
+
+then the fastq file with a bit over 17 MB is prepared.
+
 ### Index the Reference Genome
 
 ```bash
@@ -396,7 +429,7 @@ hic-pro -i input_data -o output_data -c config-hicpro.txt
 ```
 
 |               | SYSTEM CONFIGURATION                                                       |
-| ------------- | -------------------------------------------------------------------------- |
+|---------------|----------------------------------------------------------------------------|
 | PREFIX        | Path to installation folder                                                |
 | BOWTIE2_PATH  | Full path the bowtie2 installation directory                               |
 | SAMTOOLS_PATH | Full path to the samtools installation directory                           |

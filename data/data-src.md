@@ -3,7 +3,7 @@
 ## Experiment Information
 
 |                          | Information                                   |
-| ------------------------ | --------------------------------------------- |
+|--------------------------|-----------------------------------------------|
 | Organism                 | Drosophila melanogaster                       |
 | Instrument Model         | Illumina HiSeq 2500                           |
 | Mapping Genome           | Drosophila melanogaster genome (assembly dm3) |
@@ -12,6 +12,16 @@
 ## Reference Genome 
 
 - [Drosophila melanogaster genome (dm3)](https://genome.ucsc.edu/cgi-bin/hgSearch?search=dm3&db=dm3)
+
+## UCSC Genome Browser
+
+You can download data from the UCSC Genome Browser using the following link:
+[UCSC Genome Browser Downloads](https://hgdownload.soe.ucsc.edu/downloads.html)
+
+### Drosophila melanogaster (dm3)
+
+The dm3 data can be found here:
+[dm3 BigZips](https://hgdownload.soe.ucsc.edu/goldenPath/dm3/bigZips/)
 
 ## SRA Data
 
@@ -51,7 +61,7 @@ Series Matrix File(s): TXTHelp
 ### Supplementary Files
 
 | File Name                                | Size     | Format |
-| ---------------------------------------- | -------- | ------ |
+|------------------------------------------|----------|--------|
 | GSE99104_nm_none_10000.bins.txt.gz       | 92.7 Kb  | TXT    |
 | GSE99104_nm_none_10000.n_contact.txt.gz  | 114.7 Mb | TXT    |
 | GSE99104_nm_none_160000.bins.txt.gz      | 6.0 Kb   | TXT    |
