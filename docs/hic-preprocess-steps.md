@@ -397,6 +397,30 @@ bwa mem -SP5M dm3.fa SRR5579177_1.fastq SRR5579177_2.fastq > dm3-aligned_reads.s
 you can find the flags here:
 https://bio-bwa.sourceforge.net/bwa.shtml
 
+### make .pairs file
+
+find the `.sizes` file in: 
+https://hgdownload.soe.ucsc.edu/goldenPath/dm3/bigZips/
+
+```bash
+# Find ligation pairs in .sam data, make .pairs. SAM_PATH : an input .sam/.bam file with paired-end sequence alignments of Hi-C molecules. If the path ends with .bam, the input is decompressed from bam with samtools.
+pairtools parse -c dm3.chrom.sizes -o output.pairsam input.sam
+
+# Sort pairs in the lexicographic order along chrom1 and chrom2, in the numeric order along pos1 and pos2 and in the lexicographic order along pair_type.
+pairtools sort -o sorted.pairsam output.pairsam
+
+# Find and remove PCR/optical duplicates.
+pairtools dedup -o dedup.pairsam sorted.pairsam
+
+# Select pairs with "unique-unique"
+pairtools select '(pair_type == "UU")' -o output.pairs dedup.pairsam
+
+```
+
+
+
+
+
 ```bash
 # build bowtie index of dm3
 bowtie-build ../dm3.fa dm3_index
