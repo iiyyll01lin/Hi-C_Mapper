@@ -397,11 +397,73 @@ bwa mem -SP5M dm3.fa SRR5579177_1.fastq SRR5579177_2.fastq > dm3-aligned_reads.s
 you can find the flags here:
 https://bio-bwa.sourceforge.net/bwa.shtml
 
-alternatively:
+```bash
+# build bowtie index of dm3
+bowtie-build ../dm3.fa dm3_index
+
+# you will get 6 index files
+root@08e290bd86fc:/home/yy/bio-fp/bowtie# ls
+dm3_index.1.ebwt  dm3_index.2.ebwt  dm3_index.3.ebwt  dm3_index.4.ebwt  dm3_index.rev.1.ebwt  dm3_index.rev.2.ebwt
+
+# check the summary of the dm3 bowtie index
+bowtie-inspect dm3_index -s
+SA-Sample       1 in 32
+FTab-Chars      10
+Sequence-1      chr2L   23011544
+Sequence-2      chr2LHet        368872
+Sequence-3      chr2R   21146708
+Sequence-4      chr2RHet        3288761
+Sequence-5      chr3L   24543557
+Sequence-6      chr3LHet        2555491
+Sequence-7      chr3R   27905053
+Sequence-8      chr3RHet        2517507
+Sequence-9      chr4    1351857
+Sequence-10     chrU    10049037
+Sequence-11     chrUextra       29004656
+Sequence-12     chrX    22422827
+Sequence-13     chrXHet 204112
+Sequence-14     chrYHet 347038
+Sequence-15     chrM    19517
+
+
+bowtie dm3_index -1 ../SRR5579177_1.fastq -2 ../SRR5579177_2.fastq  -t -a -m 1 --best -S dm3_bowtie_align_output.sam
+
+# Align paired-end reads with Bowtie1
+bowtie reference_index \ # use the prefix is ok
+    -1 reads_1.fastq \
+    -2 reads_2.fastq \
+    -S \              # SAM format output
+    -m 1 \           # Report only unique alignments
+    --best \         # Report best alignment
+    -t \            # Print timing info
+    -a \
+    output.sam
+
 
 ```
+
+```bash
+# sam to bam
+samtools view -bS dm3_bowtie_align_output.sam > output.bam
+
+# sort bam
+samtools sort output.bam -o sorted.bam
+
+# bam to pairs
+pairtools parse sorted.bam \
+    --min-mapq 40 \
+    --walks-policy 5unique \
+    --max-inter-align-gap 30 \
+    --output output.pairs
+```
+
+
+alternatively:
+
+```bash
 # Build the Bowtie2 index
 bowtie2-build reference.fasta reference_index
+
 
 # Align paired-end reads (FASTQ) to the reference
 bowtie2 -x reference_index \
@@ -409,6 +471,15 @@ bowtie2 -x reference_index \
     -2 reads_2.fastq \
     -S output.sam
 ```
+
+bowtie manual: https://bowtie-bio.sourceforge.net/manual.shtml
+
+| flags  |                                                          |
+|--------|----------------------------------------------------------|
+| -t     | Print the amount of wall-clock time taken by each phase. |
+| -a     | Full path the bowtie2 installation directory             |
+| -m 1   | Full path to the samtools installation directory         |
+| --best | Full path to the R installation directory                |
 
 ### Process Aligned Reads with HiC-Pro
 
@@ -485,6 +556,33 @@ hic-pro -i contact_matrix -o normalized_matrix -c config_file
 ```bash
 java -jar Juicebox.jar -g reference_genome.fa -n normalized_matrix
 ```
+
+######################################################################
+
+## from .cool
+
+```mermaid
+
+```
+
+```bash
+cd /code
+
+# build .cool from bin & contact
+# output: output.cool
+python3 build-cooler.py
+
+# Generate a multi-resolution cooler file by coarsening
+# output: output.mcool
+cooler zoomify output.cool
+
+# build a contact map with .mcool
+python3 mcool_map.py
+```
+
+cooler doc:
+https://cooler.readthedocs.io/en/latest/cli.html#cooler-zoomify
+
 
 ## Reference
 
