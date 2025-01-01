@@ -11,7 +11,7 @@
 
 ## Reference Genome 
 
-- [Drosophila melanogaster genome (dm3)](https://genome.ucsc.edu/cgi-bin/hgSearch?search=dm3&db=dm3)
+- [UCSC Genome Browser: Drosophila melanogaster genome (dm3)](https://genome.ucsc.edu/cgi-bin/hgSearch?search=dm3&db=dm3)
 
 ## UCSC Genome Browser
 

@@ -397,29 +397,7 @@ bwa mem -SP5M dm3.fa SRR5579177_1.fastq SRR5579177_2.fastq > dm3-aligned_reads.s
 you can find the flags here:
 https://bio-bwa.sourceforge.net/bwa.shtml
 
-### make .pairs file
-
-find the `.sizes` file in: 
-https://hgdownload.soe.ucsc.edu/goldenPath/dm3/bigZips/
-
-```bash
-# Find ligation pairs in .sam data, make .pairs. SAM_PATH : an input .sam/.bam file with paired-end sequence alignments of Hi-C molecules. If the path ends with .bam, the input is decompressed from bam with samtools.
-pairtools parse -c dm3.chrom.sizes -o output.pairsam input.sam
-
-# Sort pairs in the lexicographic order along chrom1 and chrom2, in the numeric order along pos1 and pos2 and in the lexicographic order along pair_type.
-pairtools sort -o sorted.pairsam output.pairsam
-
-# Find and remove PCR/optical duplicates.
-pairtools dedup -o dedup.pairsam sorted.pairsam
-
-# Select pairs with "unique-unique"
-pairtools select '(pair_type == "UU")' -o output.pairs dedup.pairsam
-
-```
-
-
-
-
+alternatively, you can use bowtie:
 
 ```bash
 # build bowtie index of dm3
@@ -462,8 +440,6 @@ bowtie reference_index \ # use the prefix is ok
     -t \            # Print timing info
     -a \
     output.sam
-
-
 ```
 
 ```bash
@@ -557,13 +533,41 @@ hic-pro -i input_data -o output_data -c config-hicpro.txt
 | PYTHON_PATH   | Full path to the python installation directory                             |
 | CLUSTER_SYS   | Scheduler to use for cluster submission. Must be TORQUE, SGE, SLURM or LSF |
 
-## Step 5: Filter and Deduplicate (HiC-Pro)
+## Step 5: Filter and Deduplicate (HiC-Pro, pairtools) 
+
+### make .pairs file
+
+find the `.sizes` file in: 
+https://hgdownload.soe.ucsc.edu/goldenPath/dm3/bigZips/
 
 ```bash
-hic-pro -i aligned_reads.sam -o output_data -c config_file
+# Find ligation pairs in .sam data, make .pairs. SAM_PATH : an input .sam/.bam file with paired-end sequence alignments of Hi-C molecules. If the path ends with .bam, the input is decompressed from bam with samtools.
+pairtools parse -c dm3.chrom.sizes -o output.pairsam input.sam
+
+# Sort pairs in the lexicographic order along chrom1 and chrom2, in the numeric order along pos1 and pos2 and in the lexicographic order along pair_type.
+pairtools sort -o sorted.pairsam output.pairsam
+
+# Find and remove PCR/optical duplicates.
+pairtools dedup -o dedup.pairsam sorted.pairsam
+
+# Select pairs with "unique-unique"
+pairtools select '(pair_type == "UU")' -o output.pairs dedup.pairsam
+
+```
+
+```bash
+hic-pro -i aligned_reads.sam -o output_data -c config_file 
 ```
 
 ## Step 6: Generate Contact Matrix (HiC-Pro, Juicer, HiCExplorer)
+
+### R
+
+```bash
+/code/contact_file_generate.R
+```
+
+### HIC-PRO
 
 ```bash
 hic-pro -i filtered_data -o contact_matrix -c config_file
@@ -571,23 +575,35 @@ hic-pro -i filtered_data -o contact_matrix -c config_file
 
 ## Step 7: Normalize Contact Matrix (HiC-Pro, Juicer, HiCExplorer)
 
+### R
+
+```bash
+/code/contact_file_generate.R
+```
+
+### HIC-PRO
+
 ```bash
 hic-pro -i contact_matrix -o normalized_matrix -c config_file
 ```
 
 ## Step 8: Visualize Contact Map (Juicebox, HiCPlotter, HiCExplorer)
 
+### R
+
+```bash
+/code/contact_map_generate.R
+```
+
+### JAVA
+
 ```bash
 java -jar Juicebox.jar -g reference_genome.fa -n normalized_matrix
 ```
 
-######################################################################
+###############################
 
-## from .cool
-
-```mermaid
-
-```
+## alternative: build contact map using .cool
 
 ```bash
 cd /code
@@ -610,6 +626,9 @@ https://cooler.readthedocs.io/en/latest/cli.html#cooler-zoomify
 
 ## Reference
 
+### HI-C Analysis
+* [Hi-C pre-processing steps](https://bioconductor.org/books/devel/OHCA/pages/principles.html)
+
 ### SRA-Tools Docker
 
 * [SRA-Tools GitHub](https://github.com/ncbi/sra-tools)
@@ -617,4 +636,42 @@ https://cooler.readthedocs.io/en/latest/cli.html#cooler-zoomify
 * [SRA-Tools Docker Wiki](https://github.com/ncbi/sra-tools/wiki/SRA-tools-docker)
 * [Prefetch and Fasterq-Dump](https://github.com/ncbi/sra-tools/wiki/08.-prefetch-and-fasterq-dump)
 * [HowTo: Fasterq-Dump](https://github.com/ncbi/sra-tools/wiki/HowTo:-fasterq-dump)
+
+### Reference Genome
+* [dm3 related](https://hgdownload.soe.ucsc.edu/goldenPath/dm3/bigZips/)
+
+### Illumina
+
+* [Illumina sequencing libraries](https://teichlab.github.io/scg_lib_structs/methods_html/Illumina.html)
+* 
+
+### Bowtie
+* [bowtie1 comparison](https://rnnh.github.io/bioinfo-notebook/docs/bowtie2.html#differences-between-bowtie-and-bowtie2)
+* [installation](https://www.metagenomics.wiki/tools/bowtie2/install)
+* [bowtie2 docs](https://bowtie-bio.sourceforge.net/bowtie2/manual.shtml#the-bowtie2-aligner)
+* [bowtie 1 docs](https://bowtie-bio.sourceforge.net/manual.shtml#the-bowtie-inspect-index-inspector)
+
+### bwa
+
+* [github](https://github.com/lh3/bwa#multihit)
+
+### Pairs
+
+* [pairix](https://github.com/4dn-dcic/pairix)
+* [pypairix](https://pypi.org/project/pypairix/0.1.0/)
+* [pairtools](https://pairtools.readthedocs.io/en/latest/cli_tools.html)
+* [micro-c](https://micro-c.readthedocs.io/en/latest/contact_map.html#from-pairs-to-cooler-contact-matrix)
+* [pairs file format](https://github.com/4dn-dcic/pairix/blob/master/pairs_format_specification.md)
+
+### Cool
+* [cooler doc](https://cooler.readthedocs.io/en/stable/cli.html)
+* [cooler github](https://github.com/open2c/cooler/tree/master/docs)
+
+### HIC-PRO
+* [hic-pro docs](https://github.com/nservant/HiC-Pro/blob/master/doc)
+* [github](https://github.com/nservant/HiC-Pro)
+
+### GenPipes
+* [docs](https://genpipes.readthedocs.io/en/genpipes-v-3.6.2/user_guide/pipelines/gp_hicseq.html)
+
 
