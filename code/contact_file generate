@@ -1,12 +1,12 @@
 # 加載 Bin 文件
 bins <- read.table("GSE99104_nm_none_160000.bins.txt", header = TRUE, sep = "\t")
 
-# 加載 Pair 文件
-pairs <- read.table("pair_file.txt", header = TRUE, sep = "\t")
+# 加載 Pair 文件（從第 41 行開始）
+pairs <- read.table("pair_file.txt", header = TRUE, sep = "\t", skip = 40)
 
-# 僅篩選 chr=2L 的 bin 和配對數據
+# 僅篩選 chr=2L 的部分
 bins <- subset(bins, chr == "2L")
-pairs <- subset(pairs, bin1 %in% bins$cbin & bin2 %in% bins$cbin)
+pairs <- subset(pairs, chrom1 == "2L" & chrom2 == "2L")
 
 # 初始化數據框來存儲結果
 result <- data.frame(cbin1 = integer(), cbin2 = integer(), expected_count = numeric(), observed_count = numeric())
@@ -14,17 +14,20 @@ result <- data.frame(cbin1 = integer(), cbin2 = integer(), expected_count = nume
 # 計算每對 cbin 的 observed count
 observed <- matrix(0, nrow = nrow(bins), ncol = nrow(bins))
 for (i in 1:nrow(pairs)) {
-  cbin1 <- pairs$bin1[i]
-  cbin2 <- pairs$bin2[i]
+  # 找到 pairs 中對應的 cbin1 和 cbin2
+  cbin1 <- with(bins, cbin[chr == pairs$chrom1[i] & from.coord <= pairs$pos1[i] & to.coord > pairs$pos1[i]])
+  cbin2 <- with(bins, cbin[chr == pairs$chrom2[i] & from.coord <= pairs$pos2[i] & to.coord > pairs$pos2[i]])
   
-  # 找到對應的 bin 索引
-  cbin1_index <- which(bins$cbin == cbin1)
-  cbin2_index <- which(bins$cbin == cbin2)
-  
-  # 增加觀測次數
-  observed[cbin1_index, cbin2_index] <- observed[cbin1_index, cbin2_index] + 1
-  if (cbin1_index != cbin2_index) {
-    observed[cbin2_index, cbin1_index] <- observed[cbin1_index, cbin2_index]  # 對稱矩陣
+  # 確保 cbin 存在
+  if (length(cbin1) == 1 & length(cbin2) == 1) {
+    cbin1_index <- which(bins$cbin == cbin1)
+    cbin2_index <- which(bins$cbin == cbin2)
+    
+    # 增加觀測次數
+    observed[cbin1_index, cbin2_index] <- observed[cbin1_index, cbin2_index] + 1
+    if (cbin1_index != cbin2_index) {
+      observed[cbin2_index, cbin1_index] <- observed[cbin1_index, cbin2_index]  # 對稱矩陣
+    }
   }
 }
 
@@ -55,3 +58,5 @@ for (i in 1:nrow(bins)) {
 
 # 將結果保存到文件
 write.table(result, "cbin_observed_expected_2L_final_with_pairs.txt", sep = "\t", row.names = FALSE, quote = FALSE)
+
+
