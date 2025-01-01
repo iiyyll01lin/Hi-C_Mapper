@@ -57,6 +57,6 @@ for (i in 1:nrow(bins)) {
 }
 
 # Save results to file
-write.table(result, "cbin_observed_expected_2L_final_with_pairs.txt", sep = "\t", row.names = FALSE, quote = FALSE)
+write.table(result, "2L_contact_matrix.txt", sep = "\t", row.names = FALSE, quote = FALSE)
 
 

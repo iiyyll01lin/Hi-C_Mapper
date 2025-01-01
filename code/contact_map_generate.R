@@ -4,7 +4,7 @@ library(reshape2)
 
 # Load the data
 # Replace "your_file.csv" with the path to your data file
-data <- read.table("GSE99104_nm_none_40000.n_contact.txt", header = TRUE)
+data <- read.table("GSE99104_nm_none_10000.n_contact.txt", header = TRUE)
 
 # Create a matrix for log-transformed observed/expected ratios
 n_bins <- max(data$cbin1, data$cbin2)
@@ -31,37 +31,32 @@ for (i in 1:nrow(data)) {
 heatmap_data <- melt(matrix_log_ratio)
 colnames(heatmap_data) <- c("x", "y", "value")
 
-# Plot heatmap with three to five colors (如果跑不到，用下面的)
-ggplot(heatmap_data, aes(x = x, y = y, fill = value)) +
-  geom_tile() +
-  scale_fill_gradientn(
-    colors = c("#ffffff", "#44a2fe", "#653056", "#d26500", "#fec14f", "#faeeda", "#3434a3"), 
-    values = scales::rescale(c(0, 2, 7, 11, 14, 16)), # Adjust positions of colors
-    na.value = "white",
-    name = "Contact Enrichment (log2 scale)"
-  ) +
-  scale_x_continuous(
-    breaks = c(0, 500, 1000, 1500, 2000, 2500, 3000),  # Specify where the ticks should be
-    labels = c("10,000kb", "10,500kb", "11,000kb", "11,500kb", "12,000kb", "12,500kb", "13,000kb")  # Custom labels for those ticks
-  ) +
-  scale_y_continuous(
-    breaks = c(0, 500, 1000, 1500, 2000, 2500, 3000),  # Specify where the ticks should be
-    labels = c("10,000kb", "10,500kb", "11,000kb", "11,500kb", "12,000kb", "12,500kb", "13,000kb")  # Custom labels for those ticks
-  ) +
-  labs(
-    title = "Hi-C Contact Heatmap"
-  ) +
-  coord_fixed()
+library(tidyverse)
+# Filter data for the range 12,500kb to 13,000kb
+filtered_data <- heatmap_data %>%
+  filter(x >= 2500 & x <= 3000, y >= 2500 & y <= 3000)
 
-# Plot heatmap with three to five colors
-ggplot(heatmap_data, aes(x = x, y = y, fill = value)) +
+ggplot(filtered_data, aes(x = x, y = y, fill = value)) +
   geom_tile() +
   scale_fill_gradientn(
-    colors = c("#ffffff", "#44a2fe", "#653056", "#d26500", "#fec14f", "#faeeda", "#3434a3"), 
-    values = scales::rescale(c(0, 2, 7, 11, 14, 16)), # Adjust positions of colors
-    na.value = "white",
+    colors = c("#ffffff", "#2793fe", "#8c0703", "#f99d01", "#f7f4f2", "#2b2b9f"),
+    values = scales::rescale(c(0, 2, 7, 11, 14, 16)),
+    breaks = c(0, 2, 7, 11, 14, 16),
+    labels = c("0", "2", "7", "11", "14", "16"),
     name = "Contact Enrichment (log2 scale)"
   ) +
   theme_minimal() +
-  labs(title = "Hi-C Log-transformed Observed/Expected Ratio Heatmap") +
+  scale_x_continuous(
+    breaks = c(2500, 2600, 2700, 2800, 2900, 3000),  # Specify where the ticks should be
+    labels = c("10,000kb", "10,500kb", "11,000kb", "11,500kb", "12,000kb", "12,500kb")  # Custom labels for those ticks
+  ) +
+  scale_y_continuous(
+    breaks = c(2500, 2600, 2700, 2800, 2900, 3000),  # Specify where the ticks should be
+    labels = c("10,000kb", "10,500kb", "11,000kb", "11,500kb", "12,000kb", "12,500kb")  # Custom labels for those ticks
+  ) +
+  labs(
+    title = "Hi-C Contact Heatmap",
+    x = "2L",
+    y = "2L"
+  ) +
   coord_fixed()
