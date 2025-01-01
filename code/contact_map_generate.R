@@ -3,7 +3,7 @@ library(ggplot2)
 library(reshape2)
 
 # Load the data
-# Replace "your_file.csv" with the path to your data file
+# Replace ".txt" with the path to your data file
 data <- read.table("GSE99104_nm_none_10000.n_contact.txt", header = TRUE)
 
 # Create a matrix for log-transformed observed/expected ratios
