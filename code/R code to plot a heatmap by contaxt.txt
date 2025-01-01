@@ -1,0 +1,45 @@
+# Load required libraries
+library(ggplot2)
+library(reshape2)
+
+# Load the data
+# Replace "your_file.csv" with the path to your data file
+data <- read.table("GSE99104_nm_none_160000.n_contact.txt", header = TRUE)
+
+# Create a matrix for observed counts
+n_bins <- max(data$cbin1, data$cbin2)
+matrix_ratio <- matrix(NA, nrow = n_bins, ncol = n_bins)  # Initialize with NA for symmetry handling
+
+# Fill the matrix with observed/expected ratios
+for (i in 1:nrow(data)) {
+  row <- data$cbin1[i]
+  col <- data$cbin2[i]
+  obs <- data$observed_count[i]
+  exp <- data$expected_count[i]
+  
+  if (exp > 0) {  # Avoid division by zero
+    ratio <- obs / exp
+  } else {
+    ratio <- NA
+  }
+  
+  matrix_ratio[row, col] <- ratio
+  matrix_ratio[col, row] <- ratio  # Symmetry for Hi-C data
+}
+
+# Convert the ratio matrix to a data frame for ggplot2
+heatmap_data <- melt(matrix_ratio)
+colnames(heatmap_data) <- c("x", "y", "value")
+
+# Plot heatmap with three to five colors
+ggplot(heatmap_data, aes(x = x, y = y, fill = log2(value + 1))) +
+  geom_tile() +
+  scale_fill_gradientn(colors = c("#2c7bb6", "#abd9e9", "#ffffbf", "#fdae61", "#d7191c"), na.value = "white") +
+  theme_minimal() +
+  labs(
+    title = "Hi-C Observed/Expected Ratio Heatmap",
+    x = "Genomic Bins",
+    y = "Genomic Bins",
+    fill = "log2(O/E Ratio)"
+  ) +
+  coord_fixed()
