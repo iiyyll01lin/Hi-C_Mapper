@@ -2,7 +2,8 @@
 bins <- read.table("GSE99104_nm_none_160000.bins.txt", header = TRUE, sep = "\t")
 
 # 加載 Pair 文件（從第 41 行開始）
-pairs <- read.table("pair_file.txt", header = TRUE, sep = "\t", skip = 40)
+; pairs <- read.table("pair_file.txt", header = TRUE, sep = "\t", skip = 40)
+pairs <- read.table("pair_file.txt", header = TRUE, sep = "\t", fill=TRUE)
 
 # 僅篩選 chr=2L 的部分
 bins <- subset(bins, chr == "2L")
