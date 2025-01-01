@@ -32,7 +32,7 @@ heatmap_data <- melt(matrix_log_ratio)
 colnames(heatmap_data) <- c("x", "y", "value")
 
 library(tidyverse)
-# Filter data for the range 12,500kb to 13,000kb
+# Filter data for the range of 2500~3000 (select range@interval of 500)
 filtered_data <- heatmap_data %>%
   filter(x >= 2500 & x <= 3000, y >= 2500 & y <= 3000)
 
@@ -41,9 +41,9 @@ ggplot(filtered_data, aes(x = x, y = y, fill = value)) +
   scale_fill_gradientn(
     colors = c("#ffffff", "#2793fe", "#8c0703", "#f99d01", "#f7f4f2", "#2b2b9f"),
     values = scales::rescale(c(0, 2, 7, 11, 14, 16)),
-    breaks = c(0, 2, 7, 11, 14, 16),
-    labels = c("0", "2", "7", "11", "14", "16"),
-    name = "Contact Enrichment (log2 scale)"
+    breaks = c(0, 1, 6, 12, 16),
+    labels = c("0", "2", "7", "14", "16"),
+    name = "Contact Enrichment (log"[2]~" scale)"
   ) +
   theme_minimal() +
   scale_x_continuous(
