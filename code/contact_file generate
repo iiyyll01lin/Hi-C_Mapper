@@ -1,0 +1,57 @@
+# 加載 Bin 文件
+bins <- read.table("GSE99104_nm_none_160000.bins.txt", header = TRUE, sep = "\t")
+
+# 加載 Pair 文件
+pairs <- read.table("pair_file.txt", header = TRUE, sep = "\t")
+
+# 僅篩選 chr=2L 的 bin 和配對數據
+bins <- subset(bins, chr == "2L")
+pairs <- subset(pairs, bin1 %in% bins$cbin & bin2 %in% bins$cbin)
+
+# 初始化數據框來存儲結果
+result <- data.frame(cbin1 = integer(), cbin2 = integer(), expected_count = numeric(), observed_count = numeric())
+
+# 計算每對 cbin 的 observed count
+observed <- matrix(0, nrow = nrow(bins), ncol = nrow(bins))
+for (i in 1:nrow(pairs)) {
+  cbin1 <- pairs$bin1[i]
+  cbin2 <- pairs$bin2[i]
+  
+  # 找到對應的 bin 索引
+  cbin1_index <- which(bins$cbin == cbin1)
+  cbin2_index <- which(bins$cbin == cbin2)
+  
+  # 增加觀測次數
+  observed[cbin1_index, cbin2_index] <- observed[cbin1_index, cbin2_index] + 1
+  if (cbin1_index != cbin2_index) {
+    observed[cbin2_index, cbin1_index] <- observed[cbin1_index, cbin2_index]  # 對稱矩陣
+  }
+}
+
+# 計算 bin 的中心位置
+bins$center <- (bins$from.coord + bins$to.coord) / 2
+
+# 計算 expected count（距離依賴模型）
+expected <- matrix(0, nrow = nrow(bins), ncol = nrow(bins))
+for (i in 1:nrow(bins)) {
+  for (j in i:nrow(bins)) {
+    # 計算 bin 中心的距離
+    distance <- abs(bins$center[i] - bins$center[j])
+    distance_bin <- floor(distance / 160000) * 160000  # 距離分段（例如每 160kb）
+    
+    # 找到該距離範圍內的 observed count
+    observed_at_distance <- observed[abs(outer(bins$center, bins$center, "-")) == distance_bin]
+    expected_count <- mean(observed_at_distance, na.rm = TRUE)
+    
+    # 填充矩陣
+    expected[i, j] <- expected_count
+    expected[j, i] <- expected[i, j]  # 對稱矩陣
+    
+    # 保存到結果數據框
+    result <- rbind(result, data.frame(cbin1 = bins$cbin[i], cbin2 = bins$cbin[j], 
+                                       expected_count = expected[i, j], observed_count = observed[i, j]))
+  }
+}
+
+# 將結果保存到文件
+write.table(result, "cbin_observed_expected_2L_final_with_pairs.txt", sep = "\t", row.names = FALSE, quote = FALSE)
