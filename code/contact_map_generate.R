@@ -1,3 +1,7 @@
+install.packages("ggplot2")
+install.packages("reshape2")
+
+
 # Load required libraries
 library(ggplot2)
 library(reshape2)
