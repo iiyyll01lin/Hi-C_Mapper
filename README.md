@@ -53,9 +53,10 @@ pairtools select '(pair_type == "UU")' -o output.pairs dedup.pairsam
 #### Visulaize: R
 
 ```bash
-Rscript code/contact_file_generate.R
+cd code
+Rscript contact_file_generate.R
 
-Rscript code/contact_map_generate.R 
+Rscript contact_map_generate.R 
 ```
 
 #### Visulaize: Python with .cool
