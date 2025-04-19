@@ -1,10 +1,10 @@
 # TADs are 3D structural units of higher-order chromosome organization in Drosophila
 
 ### Contribute Members
-* 李柏漢, 113753218
-* 林穎彥, 113971012
-* 黃宇秀, 113754001
-* 邱淦均, 110304027
+* 李柏漢
+* 林穎彥
+* 黃宇秀
+* 邱淦均
 
 ### Demo 
 
